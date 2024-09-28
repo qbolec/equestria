@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<head>
+	<meta charset="UTF-8">
+	<script src="Tone.js"></script>
+	<script src="music_lib.js"></script>
+	<script src="map.js"></script>
+	<script src="Tonejs-Instruments.js"></script>
+	<style>
+		body.won .row:nth-child(n+200) .woda:after{
+		    content: " ";
+		    position: absolute;
+		    width: 2px;
+		    height: 10px;
+		    transform: scale(0.01);
+		    animation-name: win;
+		    animation-duration: 3s;
+		    animation-iteration-count: infinite;
+		}
+		body.won .woda:nth-child(4n):after{
+		  background: red;
+		}
+		body.won .woda:nth-child(4n+1):after{
+		  background: blue;
+		}
+		body.won .woda:nth-child(4n+2):after{
+		  animation-duration: 3.2s;
+		  background: green;
+		}
+		body.won .woda:nth-child(4n+3):after{
+		  background: yellow;
+		}
+		body.won .woda:nth-child(3n):after{
+		  animation-duration: 2.2s;
+		}
+		body.won .woda:nth-child(3n+1):after{
+		  animation-duration: 3.5s;
+		}
+		body.won .woda:nth-child(3n+2):after{
+		  animation-delay: 0.2s;
+		}
+		body.won .woda:nth-child(5n):after{
+		  font-size:1.5em;
+		}
+		body.won .woda:nth-child(5n+1):after{
+		  font-size:3em;
+		}
+		body.won .woda:nth-child(5n+2):after{
+		  font-size:2em;
+		}
+		body.won .woda:nth-child(5n+3):after{
+		  font-size:0.7em;
+		}
+		body.won .woda:nth-child(5n+4):after{
+		  font-size:2.3em;
+		}
+		body.won .row:nth-child(3n) .woda:after{
+		  animation-duration: 2.8s;
+		}
+		body.won .row:nth-child(3n+1) .woda:after{
+		  animation-delay: 0.5s;
+		}
+		body.won .row:nth-child(3n+2) .woda:after{
+		  animation-delay: 0.7s;
+		}
+		body.won .woda.wwww:after{
+			display:none;
+		}
+		body.won .woda{
+			font-size:60px;
+		}
+		@keyframes win {
+		  from {
+		    transform: translate(-0.2em, 0.1em) rotate(-45deg) scale(0.1);
+		  }
+		  30% {
+		    transform: translate(-10px, -2em) rotate(145deg) translate(0px,1em) rotate(450deg) scale(2);
+		  }
+		  to {
+		    transform: translate(10px, 200px) rotate(1000deg) scale(0.01);
+		  }
+		}
+
+
+		body {
+			background: black;
+			width: 100%;
+			height: 100vh;
+			margin: 0;
+			padding: 10px 0 0 0;
+			overflow: hidden;
+		}
+		#viewport {
+			width: 960px;
+			height: 640px;
+			overflow: hidden;
+			position: relative;
+			margin: 30px;
+		}
+		#world {
+			width: 2000px;
+			height: 2000px;
+			position: absolute;
+			/*background: url("tło.jpg");*/
+			top:-48px;
+			left:-48px;
+		}
+		.kon{
+			background-image:url("horse_paint_white_gold.png");
+			background-size:1536px; /*width, half the png width*/
+			width: 64px;
+			height:64px;
+			position:absolute;
+			animation-iteration-count: infinite;
+			z-index: 1;
+			filter:hue-rotate(286deg);
+		}
+		body.kłus .kon{
+			filter:hue-rotate(-200deg);
+		}
+		body.galop .kon{
+			filter:hue-rotate(0deg);
+		}
+		.kon.stand{
+			animation-name: stand;
+  			animation-timing-function: steps(4,jump-end);
+		}
+		@keyframes stand{
+			from {
+				background-position-x: -0px;
+			}
+			to {
+				background-position-x: -256px;
+			}
+		}
+		.kon.run{
+  			animation-timing-function: steps(8,jump-end);
+  			animation-name: run;
+		}
+		@keyframes run{
+			from {
+				background-position-x: -256px;
+			}
+			to {
+				background-position-x: -768px;
+			}
+		}
+		@keyframes jump {
+		  0% {
+		    margin-top:0px;
+		    background-position-x: -768px;
+		    animation-timing-function: linear;
+		  }
+		  19% {
+		    margin-top:-15px;
+		    background-position-x: -768px;
+		    animation-timing-function: step-end;
+		  }
+		  20% {
+		    margin-top:-15px;
+		    background-position-x: -832px;
+		    animation-timing-function: linear;
+		  }
+		  39% {
+		  	margin-top:-30px;
+		  	background-position-x: -832px;
+		  	animation-timing-function: step-end;
+		  }
+		  40% {
+		  	margin-top:-30px;
+		  	background-position-x: -896px;
+		    animation-timing-function: linear;
+		  }
+		  59% {
+		  	margin-top:-15px;
+		  	background-position-x: -896px;
+		  	animation-timing-function: step-end;
+		  }
+		  60% {
+		  	margin-top:-15px;
+		  	background-position-x: -960px;
+		  	animation-timing-function: linear;
+		  }
+		  79% {
+		  	margin-top:-5px;
+		  	background-position-x: -960px;
+		  	animation-timing-function: step-end;
+		  }
+		  80% {
+		  	margin-top:-5px;
+		  	background-position-x: -1024px;
+		  	animation-timing-function: linear;
+		  }
+		  100% {
+		    margin-top:0px;
+		    background-position-x: -1024px;
+		   	animation-timing-function: step-end;
+		  }
+		}
+		.kon.k4{
+			background-position-y: 0px;
+			margin-top: -3px;
+			margin-left: -2px;
+		}
+		.kon.k7{
+			background-position-y: -64px;
+			margin-top: -6px;
+			margin-left: -1px;
+		}
+		.kon.k8{
+			background-position-y: -128px;
+			margin-top: -7px;
+		}
+		.kon.k9{
+			background-position-y: -192px;
+			margin-top: -5px;
+			margin-left: 3px;
+		}
+		.kon.k6{
+			background-position-y: -256px;
+			margin-left: 3px;
+			margin-top: -5px;
+		}
+		.kon.k3{
+			background-position-y: -320px;
+			margin-top: -6px;
+		}
+		.kon.k2{
+			background-position-y: -384px;
+			margin-top: -5px;
+		}
+		.kon.k1{
+			background-position-y: -448px;
+			margin-top: -4px;
+		}
+
+		.kon.jump{
+			animation-name: jump;
+		}
+		.woda{
+			background-image:url("tileset.png");
+			background-size:256px 224px;
+			width:32px;
+			height:32px;
+			display: inline-block;
+			background-repeat:no-repeat;
+			position: relative;
+			pointer-events: none;
+		}
+		.woda:after{
+			pointer-events: auto;
+			content:"";
+			position: absolute;
+			top:50%;
+			left:50%;
+			width:100%;
+			height: 100%;
+			border-left: 1px solid rgba(0,0,0,0.5);
+			z-index: 1;
+			border-top: 1px solid rgba(0,0,0,0.5);
+		}
+
+		.row{
+			font-size:0;
+		}
+		#map{
+			position: absolute;
+			top:32px;
+			left:32px;
+		}
+		#muchy{
+			position: absolute;
+			transition: top 0.5s, left 0.5s;
+		}
+		.mucha{
+			position: absolute;
+			width:3px;
+			height:3px;
+			border-radius:50%;
+			transition: top 0.5s, left 0.5s;
+		}
+		.mucha:nth-child(4n+0){
+			background:repeating-linear-gradient(yellow 0, orange 2px);
+		}
+		.mucha:nth-child(4n+1){
+			background:repeating-linear-gradient(blue 0, violet 2px);
+		}
+		.mucha:nth-child(4n+2){
+			background:repeating-linear-gradient(red 0, black 2px);
+		}
+		.mucha:nth-child(4n+3){
+			background:repeating-linear-gradient(green 0, white 2px);
+		}
+		#cover {
+		  	background: url(brown-leather-texture-1.jpg);
+		  	background-size: 100%;
+			background-color: #483129;
+		}
+		#cover p span {
+			transform: translateY(58px) scaleX(1.5) scaleY(-1.5);
+			display: inline-block;
+		}
+		#horseshoe {
+			background: url(horseshoe_rainbow.png);
+			height: 393px;
+			background-size: contain;
+			background-repeat: no-repeat;
+			margin: auto;
+			width: 326px;
+			top: 40px;
+			position: relative;
+			filter: drop-shadow(0px 0px 6px black);
+			transition: filter 0.5s;
+		}
+		#book.show-page5 #horseshoe{
+			filter: drop-shadow(0px 0px 20px red);
+		}
+		#cover p {
+			color: #090909e3;
+			position: relative;
+			font-size: 138px;
+			font-family: Times New Roman;
+			text-shadow: -2px -2px 6px black;
+			line-height: 138px;
+			height: 138px;
+			display: block;
+			margin: 0;
+			text-align: center;
+		}
+		#book {
+			position: relative;
+			width: 1020px;
+			height: 700px;
+			margin: auto;
+		}
+		.page {
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			z-index: 0;
+			transform-origin: 0 center;
+			backface-visibility: hidden;
+			transform: perspective(2000px) rotateY(0deg);
+			transition: transform 2s;
+		}
+		.page.right.paper{
+			background: linear-gradient(90deg, #8c8353 0px, white 30px, white 1009px,black 1010px,white 1012px,black 1014px,white 1017px,black 1019px, white 1020px);
+		}
+		#cover::after {
+			content: "";
+			width: 95%;
+			height: 94%;
+			position: absolute;
+			top: 2%;
+			left: 4%;
+			border: 2px dashed #ffffff1c;
+		}
+		.page.left {
+			background:linear-gradient(90deg, white 0, white 900px,gray 100%);
+			left: -100%;
+			transform-origin: right center;
+			transform: perspective(2000px) rotateY(180deg);
+		}
+		.page.right::before {
+			content:"";
+			background:transparent;
+			transition: background-color 1s;
+			width:100%;
+			height:100%;
+			top:0;
+			left:0;
+			position:absolute;
+		}
+		#cover:before {
+			background:linear-gradient(90deg, #fff0 0, #fff0 20px, #ffffff24 38px,#00000078 42px, transparent 60px);
+		}
+		.page1, .page2, .page3, .page4, .page5, .page6{
+			cursor:pointer;
+		}
+
+		#book.show-page7 .page5,
+		#book.show-page7 .page3,
+		#book.show-page5 .page3,
+		#book.show-page7 .page1,
+		#book.show-page5 .page1,
+		#book.show-page3 .page1{
+			transform: perspective(2000px) rotateY(-180deg);
+		}
+		#book.show-page7 .page6,
+		#book.show-page7 .page4,
+		#book.show-page5 .page4,
+		#book.show-page7 .page2,
+		#book.show-page5 .page2,
+		#book.show-page3 .page2{
+			transform: perspective(2000px) rotateY(0deg);
+		}
+		#book.show-page7 .page1::before,
+		#book.show-page5 .page1::before,
+		#book.show-page3 .page1::before,
+		#book.show-page7 .page3::before,
+		#book.show-page5 .page3::before,
+		#book.show-page7 .page5::before {
+			background-color: black;
+		}
+
+
+		#thanks {
+			padding:20px;
+			text-align: center;
+			font-size: 25px;
+		}
+		#thanks p{
+			font-size: 20px;
+			width: 60%;
+			margin: auto;
+			display: block;
+		}
+		#thanks a{
+			color: black !important;
+		}
+
+
+		#howto .key {
+			background: radial-gradient(black, #595959);
+			width: 32px;
+			height: 32px;
+			line-height: 32px;
+			color: white;
+			font-family: monospace;
+			font-size: 17px;
+			text-align: center;
+			display: inline-block;
+			vertical-align: middle;
+			border-right: 6px solid #595959;
+			border-bottom: 6px solid #3e3e3e;
+			border-left: 2px solid #828282;
+			border-top: 2px solid gray;
+			margin: 12px;
+			transition: top 0.3s;
+			top: 0;
+			position: relative;
+		}
+
+		#howto .key.pressed {
+			top: 7px;
+		}
+		@keyframes keep_pressing{
+			from {
+				top:0;
+			}
+			10% {
+				top:7px;
+			}
+			20% {
+				top:0;
+			}
+			to {
+				top:0;
+			}
+		}
+		#howto .key.keep_pressing{
+			animation-duration: 1s;
+			animation-iteration-count: infinite;
+			animation-name:keep_pressing;
+		}
+
+		#howto {
+			width: 300px;
+			margin: 30px auto;
+		}
+		#howto .keys .kon {
+			position: relative;
+			display: inline-block;
+			vertical-align: middle;
+			animation-duration: 1s;
+			transition: left 5s linear;
+			left: 0;
+		}
+		#howto .ground {
+			display: inline-block;
+			vertical-align: middle;
+			width: 64px;
+			height: 64px;
+			line-height: 64px;
+			position: relative;
+		}
+		#howto .jumping {
+			margin-top:100px;
+		}
+		#howto .jumping .key {
+			width: 352px;
+		}
+
+		.woda::before {
+		  content: "";
+		  background-image: url("tileset.png");
+		  position: absolute;
+		  background-size: 256px;
+		  opacity: 0.25;
+		  z-index: 1;
+		}
+		#tempo {
+			position: absolute;
+			top: 5px;
+			left: 31px;
+			text-transform: capitalize;
+		}
+	</style>
+</head>
+<body>
+<div id=book>
+	<div class="page right paper page7" id="gamepage">
+		<div id="tempo"></div>
+		<div id=viewport>
+			<div id=world>
+				<div id=map></div>
+				<div id=kon class="kon k6 jump"></div>
+				<div id=muchy></div>
+			</div>
+		</div>
+	</div>
+	<div class="page right page5 paper">
+		<div id="howto">
+			<div class="running">
+				<p>Use numpad to steer your horse</p>
+				<div class="keys">
+					<div class="key">7</div>
+					<div class="key">8</div>
+					<div class="key">9</div>
+				</div>
+				<div class="keys">
+					<div class="key">4</div>
+					<div class="ground"><div class="kon"></div></div>
+					<div class="key">6</div>
+				</div>
+				<div class="keys">
+					<div class="key">1</div>
+					<div class="key">2</div>
+					<div class="key">3</div>
+				</div>
+			</div>
+			<div class="jumping">
+				<p>Use spacebar to jump!</p>
+				<div class="keys">
+					<div class="ground"><div class="kon k4 jump"></div></div>
+				</div>
+				<div class="key long"> </div>
+			</div>
+		</div>
+	</div>
+	<div class="page right page3 paper">
+		<div id="thanks">
+			<h1>Music</h1>
+			<p>Wolfgang Amadeus Mozart, <a href="https://www.8notes.com/scores/18698.asp?ftype=midi">Red Balloon Technology Ltd (8notes.com)</a>, <a href="https://tonejs.github.io/">Tone.js</a>, <a href="https://github.com/nbrosowsky/tonejs-instruments/">Nicholaus P. Brosowsky @ tonejs-instruments</a></p>
+			<h1>Ideas</h1>
+			<p>Lucyna Łopuszańska</p>
+			<h1>Illustrations</h1>
+			<p>Kuba Łopuszański, <a href="https://opengameart.org/users/vwolfdog">VWolfdog @ opengameart.org</a>, <a href="https://jooinn.com/brown-leather-texture.html">Ian L @ jooinn.com</a>, <a href="https://www.gimp.org/">GIMP</a></p>
+		</div>
+	</div>
+	<div class="page left page2"></div>
+	<div class="page left page4"></div>
+	<div class="page left page6"></div>
+	<div class="page right page1" id="cover"><div id=horseshoe></div><p>E<span>𝆕</span>uestria</p></div>
+</div>
+<div id=debug_info></div>
+</body>
+<script>
+const tilesetDescription = [
+ "wwwwwwww",
+ "wzzzzzzw",
+ "wzzwwzzw",
+ "wzwzzwzw",
+ "wzzzzzzw",
+ "wwwwwwww",
+ "wwwwwwww",
+];
+const BIG_GRID=32;
+const OVERLAP=5;
+function generateTileRules(prefix, rules){
+	if(prefix.length<4){
+		generateTileRules(prefix + 'w', rules);
+		generateTileRules(prefix + 'z', rules);
+		return;
+	}
+	const found = [];
+	for(let r=0;r+1<tilesetDescription.length;++r){
+		for(let c=0;c+1<tilesetDescription[r].length;++c){
+			if(tilesetDescription[r].substr(c,2) + tilesetDescription[r+1].substr(c,2) == prefix){
+				found.push({r,c});
+			}
+		}
+	}
+	if(!found.length)throw `Missing tile combination $prefix`;
+	const vertical = prefix.substr(0,2)==prefix.substr(2,2);
+	const horizontal = prefix[0]==prefix[1] && prefix[2]==prefix[3];
+	let variantsPerRow;
+	if(vertical){
+		if(horizontal){
+			variantsPerRow = found.length > 3 ? [((found.length+1)>>1),(found.length>>1)] : [found.length];
+		}else{
+			variantsPerRow = found.map(()=>1);
+		}
+	}else{
+		if(horizontal){
+			variantsPerRow = [found.length];
+		}else{
+			variantsPerRow = [found.length];
+		}
+	}
+	const positionsPerRow = variantsPerRow.map((variants,row)=>{
+		const positions=[];
+		for(let i=0;i<variants;++i){
+			positions.push(found.pop());
+		}
+		return positions;
+	});
+	positionsPerRow.forEach((positions,row)=>{
+		positions.forEach(({r,c},i)=>{
+			rules.push(`.row:nth-child(${positionsPerRow.length}n+${row}) .woda.${prefix}:nth-child(${positions.length}n+${i}) {
+				background-position: ${-(c+0.5)*BIG_GRID}px ${-(r+0.5)*BIG_GRID}px;
+			}`);
+			rules.push(`.row:nth-child(${positionsPerRow.length}n+${row}) .woda.${prefix}:nth-child(${positions.length}n+${i})::before {
+				background-position: ${OVERLAP-(c+0.5)*BIG_GRID}px ${OVERLAP-(r+0.5)*BIG_GRID}px;
+			}`);
+		});
+	});
+}
+{
+	let rules=[`
+		.woda::before {
+		  top: -${OVERLAP}px;
+		  left: -${OVERLAP}px;
+		  width: ${2*OVERLAP+BIG_GRID}px;
+		  height: ${2*OVERLAP+BIG_GRID}px;
+		}
+	`];
+	generateTileRules('',rules);
+	document.head.querySelector('style').innerHTML += rules.join('\n');
+}
+
+
+const waters = [].concat.apply([],theMap.map((row,r) => row.split('').map((x,c) => x == ' ' ? [r,c] : undefined).filter(x => x!==undefined)));
+const loresMap = theMap.map(row => Array.from({length:row.length},()=>'z'));
+const mapEl=document.getElementById('map');
+for(let r=0;r+1<loresMap.length;r++){
+	const rowEl=document.createElement('div');
+	rowEl.className='row';
+	for(let c=0;c+1<loresMap[r].length;c++){
+		const wodaEl = document.createElement('div');
+		wodaEl.className = 'woda';
+		rowEl.appendChild(wodaEl);
+	}
+	mapEl.appendChild(rowEl);
+}
+function redrawMap(){
+	Array.from(mapEl.children).forEach((row,r) => {
+		Array.from(row.children).forEach((wodaEl,c) => {
+			const other = `woda ${loresMap[r][c]}${loresMap[r][c+1]}${loresMap[r+1][c]}${loresMap[r+1][c+1]}`;
+			wodaEl.className = other;
+		});
+	});
+}
+redrawMap();
+
+const LICZBA_MUCH = 4;
+const muchy = Array.from({length:LICZBA_MUCH},()=>{
+	const mucha=document.createElement('div');
+	mucha.className="mucha";
+	document.getElementById('muchy').appendChild(mucha);
+	return {el:mucha, pos:[0,0]}
+});
+const sub = (a,b) => [a[0]-b[0],a[1]-b[1]];
+const add = (a,b) => [a[0]+b[0],a[1]+b[1]];
+const equal = (a,b) => a[0]==b[0] && a[1]==b[1];
+const scale = (s,a) => [a[0]*s,a[1]*s];
+const kon_el = document.getElementById('kon');
+const pos = [3,1];
+
+let last_dir = 2;
+let removeJumpClassTimer;
+const setElPos = (el, pos) => {
+	el.style.left = `${pos[0]}px`;
+	el.style.top = `${pos[1]}px`;
+}
+let toneLoading = 1;
+const samples = SampleLibrary.load({
+    instruments: [
+    	'bassoon',
+		'cello',
+		'clarinet',
+		'contrabass',
+		'flute',
+		//'saxophone',
+		'french-horn',
+		'trombone',
+		// 'violin',
+		'harp',
+		//'piano',
+	],
+	baseUrl:'./samples/',
+    ext:'.ogg',
+    onload:()=>{
+		toneLoading = 0;
+	}
+});
+
+class Player{
+	constructor(){
+		this.synths	= [];
+	}
+	isLoaded(){
+		return !!this.midi;
+	}
+	load(midi){
+		this.midi = midi;
+		const mapping = {
+			'Flute':'flute',
+			'Oboe':'french-horn',
+			'Clarinet in Bb':'clarinet',
+			'Bassoon':'bassoon',
+			'Horn in F':'trombone',
+			//'Violin 1':'violin',
+			'Violin 1':'harp',
+			//'Violin 2':'violin',
+			'Violin 2':'harp',
+			//'Viola':'violin',
+			'Viola':'harp',
+			'Violoncello':'cello',
+			'Double Bass':'contrabass',
+		}
+		midi.tracks.forEach((track,i) => {
+			const synth = (mapping[track.name] ? samples[mapping[track.name]] : new Tone.PolySynth(Tone.Synth, {
+				envelope: {
+					attack: 0.02,
+					decay: 0.1,
+					sustain: 0.3,
+					release: 1,
+				},
+			})).toDestination();
+			this.synths.push(synth);
+		});
+		this.lastNoteTime = 0;
+		this.bookedUpTo = 0;
+		this.tactDurationMs = 750/2;
+	}
+	playNext(duration, scale=1){
+		this.bookedUpTo = Math.max(Tone.now(),this.bookedUpTo);
+		this.midi.tracks.forEach((track,i)=>{
+			const synth = this.synths[i];
+			track.notes.filter(note => this.lastNoteTime<=note.time && note.time<this.lastNoteTime+duration).forEach((note) => {
+				synth.triggerAttackRelease(
+					note.name,
+					note.duration * scale,
+					(note.time - this.lastNoteTime) * scale + this.bookedUpTo,
+					note.velocity,
+				);
+			});
+		});
+		this.lastNoteTime+=duration;
+		this.bookedUpTo+=duration* scale;
+	}
+	rewindTact(){
+		this.lastNoteTime-=this.tactDurationMs/1000;
+	}
+	jumpTo(time){
+		this.lastNoteTime = time;
+	}
+	stop(){
+		const synths=this.synths;
+		while (synths.length) {
+			const synth = synths.shift();
+			synth.disconnect();
+		}
+	}
+}
+const player = new Player();
+function ensurePlayerIsLoaded(){
+	if(!player.isLoaded())player.load(music_lib[0]);
+}
+let topLeftGrid = [0,0];
+const viewportEl = document.getElementById('viewport')
+function positionHorse(){
+	setElPos(kon_el,scale(BIG_GRID,pos));
+	const relPos = sub(pos, topLeftGrid);
+	const worldSize = [loresMap[0].length-2,loresMap.length-1];
+	const visibleGridSize = scale(1/BIG_GRID,[viewportEl.clientWidth,viewportEl.clientHeight]);
+	const margin = 6;
+	for(let d=0;d<2;++d){
+		if(relPos[d] < margin || visibleGridSize[d] - margin <= relPos[d]){
+			topLeftGrid[d] = Math.min(Math.max(topLeftGrid[d]-(visibleGridSize[d]/2-relPos[d]),0),worldSize[d]-visibleGridSize[d]);
+		}
+	}
+	viewportEl.scrollTo({left:topLeftGrid[0]*BIG_GRID, top:topLeftGrid[1]*BIG_GRID,behavior:'smooth'});
+}
+const undoLog = [];
+const dir2off = {
+	'1': [-1,+1],
+	'2': [ 0,+1],
+	'3': [+1,+1],
+	'6': [+1, 0],
+	'4': [-1, 0],
+	'7': [-1,-1],
+	'8': [ 0,-1],
+	'9': [+1,-1],
+}
+function processMoveRequest(key, tactDuration, speedUp){
+	const dir=+key;
+
+	const isLand = (pos) => 0<=pos[0] && 0<=pos[1] && pos[1]<loresMap.length && loresMap[pos[1]][pos[0]]=='z';
+	const old_dir = last_dir;
+	let new_pos;
+	if(key==" "){
+		new_pos = dir2off[last_dir].map((v,d) => pos[d] + v * 2);
+		if(!isLand(new_pos)){
+			kon_el.className = `kon k${last_dir} stand`;
+			return false;
+		}
+		kon_el.className = `kon k${last_dir} jump`;
+	}else if (1<=dir && dir<=9 && dir!=5){
+		last_dir=dir;
+		new_pos = dir2off[last_dir].map((v,d) => pos[d] + v);
+		if(!isLand(new_pos)){
+			kon_el.className = `kon k${key} stand`;
+			return false;
+		}
+		kon_el.className = `kon k${key} run`;
+	}else{
+		console.log(`Unknown key ${key}`);
+		return false;
+	}
+
+	const duration = tactDuration/speedUp;
+	kon_el.style.transition = `left ${duration}s linear, top ${duration}s linear, filter 1s linear`;
+	kon_el.style.animationDuration = `${duration}s`;
+	undoLog.push({pos:pos.slice(0),dir:old_dir});
+	setMuchyStep(undoLog.length);
+	pos.splice(0,2,...new_pos);
+	player.playNext(tactDuration,1/speedUp);
+	positionHorse();
+	if(equal(pos,thePath.at(-1))){
+		document.body.className="won";
+	}
+	return true;
+}
+const moveRequestsQueue = [];
+let processNextMoveRequestTimer = null;
+const recentKeyTimestamps=[];
+function getSpeedUp(){
+	if(recentKeyTimestamps.length<5){
+		return 1;
+	}
+	const avgPeriodMs = (recentKeyTimestamps.at(-1)-recentKeyTimestamps.at(-5))/4;
+	const speedUps = [0.5,1,2];
+	const errs = speedUps.map( s =>  Math.abs(player.tactDurationMs / s - avgPeriodMs));
+	return speedUps[errs.indexOf(Math.min(...errs))];
+}
+function processNextMoveRequest(){
+	const tactDuration = player.tactDurationMs / 1000;
+	const speedUp = getSpeedUp();
+	const s2t = {
+		"0.5" : "stęp",
+		"1" : "kłus",
+		"2" : "galop",
+	}
+	const tempo = s2t[speedUp];
+	const tempo_el = document.getElementById('tempo');
+	tempo_el.innerText = tempo;
+	Object.values(s2t).forEach(t => {
+		document.body.classList[t==tempo?'add':'remove'](t);
+	});
+
+	while(true){
+		const key = moveRequestsQueue.shift();
+		showDebugInfo();
+		if(key!==undefined){
+			if(!processMoveRequest(key, tactDuration, speedUp)){
+				continue;
+			}
+			processNextMoveRequestTimer=window.setTimeout(processNextMoveRequest,tactDuration/speedUp*1000);
+		}else{
+			kon_el.classList.remove('jump');
+			kon_el.classList.remove('run');
+			kon_el.classList.add('stand');
+			processNextMoveRequestTimer=null;
+		}
+		return;
+	}
+}
+function readyToPlay(){
+	document.body.addEventListener('keydown',(e)=>{
+		if(e.repeat)return;
+		ensurePlayerIsLoaded();
+		if(e.key == 'u'){//debug-only
+			const log = undoLog.pop();
+			pos.splice(0,2,...log.pos);
+			kon_el.className = `kon k${log.dir} stand`;
+			last_dir=log.dir;
+			player.rewindTact();
+			positionHorse();
+		}
+		if(e.key == 'e'){//debug-only
+			jumpToEnd();
+		}
+		if(e.key == 'a'){
+			autoplay();
+		}
+		if(e.key == 's'){
+			save();
+		}
+		const SUPPORTED = "01234 6789";
+		if(0<=SUPPORTED.indexOf(e.key)){
+			recentKeyTimestamps.push(Date.now());
+			if(recentKeyTimestamps.length>10){
+				recentKeyTimestamps.shift();
+			}
+			moveRequestsQueue.push(e.key);
+			showDebugInfo();
+			if(processNextMoveRequestTimer==null){
+				processNextMoveRequest();
+			}
+		}
+	});
+}
+
+positionHorse();
+
+function save(){
+	console.log(`
+const theMap = ${JSON.stringify(loresMap.map(row => row.map(x => x=='w'?' ':'X').join('')),undefined,2)};
+const thePath = ${JSON.stringify(undoLog.map(x=>x.pos))};
+`);
+}
+
+
+function setMuchyStep(i){
+	const muchyEl = document.getElementById('muchy');
+	const pos = thePath[Math.min(thePath.length-1,i)];
+	setElPos(muchyEl,scale(BIG_GRID,pos));
+}
+function jumpToEnd(){
+	undoLog.length = 0;
+	undoLog.push.apply(undoLog, thePath.map(pos => ({pos, dir:6})));
+	const log = undoLog.pop();
+	pos.splice(0,2,...log.pos);
+	kon_el.className = `kon k${log.dir} stand`;
+	last_dir=log.dir;
+	player.jumpTo(player.tactDurationMs*undoLog.length/1000);
+	positionHorse();
+	setMuchyStep(undoLog.length);
+}
+
+setInterval(()=>{
+	muchy.forEach((mucha,i)=>{
+		const t=Date.now()/500+i;
+		const R=30;
+		const r=20;
+		const target=[48+Math.sin(t)*R+(Math.random()-1)*2*r,48+Math.cos(t)*R+(Math.random()-1)*2*r];
+		mucha.pos = target;
+		setElPos(mucha.el,mucha.pos);
+	});
+},100);
+
+function showDebugInfo(){
+	document.getElementById('debug_info').innerText = moveRequestsQueue.join('');
+}
+
+
+const loadingInterval = setInterval(()=>{
+	if(waters.length){
+		for(let z=0;z<300 && waters.length;++z){
+			const i=Math.floor(Math.random()*waters.length);
+			const w=waters[i];
+			waters[i]=waters.at(-1);
+			waters.pop();
+			loresMap[w[0]][w[1]]='w';
+		}
+		redrawMap();
+	}else if(!toneLoading){
+		clearInterval(loadingInterval);
+		readyToPlay();
+	}
+},10);
+
+document.getElementById('map').addEventListener('click',(e)=>{
+  const t = e.target;
+  if(t.classList.contains('woda')){
+    const row=t.parentNode;
+    const map=row.parentNode;
+    const r=1+[].indexOf.call(map.children,row);
+    const c=1+[].indexOf.call(row.children,t);
+    console.log(`clicked ${r} ${c}`)
+    loresMap[r][c]= loresMap[r][c] == 'w' ? 'z':'w';
+    redrawMap();
+  }
+})
+document.querySelector('.page1').addEventListener('click',()=>{document.getElementById('book').className='show-page3';})
+document.querySelector('.page2').addEventListener('click',()=>{document.getElementById('book').className='show-page1';})
+document.querySelector('.page3').addEventListener('click',()=>{document.getElementById('book').className='show-page5';})
+document.querySelector('.page4').addEventListener('click',()=>{document.getElementById('book').className='show-page3';})
+document.querySelector('.page5').addEventListener('click',()=>{document.getElementById('book').className='show-page7';})
+document.querySelector('.page6').addEventListener('click',()=>{document.getElementById('book').className='show-page5';})
+
+function demoKeyPress(dir){
+  const howtoEl=document.getElementById('howto');
+  const konEl=howtoEl.querySelector('.kon');
+  konEl.className = `kon k${dir} run`;
+  howtoEl.querySelectorAll('.running .key').forEach(e=>{
+     e.className = e.innerText==dir ? 'key pressed' : 'key'
+  })
+}
+
+window.setInterval(()=>{
+	const dirs=[7,8,9,6,3,2,1,4];
+	const pressed = document.querySelector('#howto .running .key.pressed');
+	demoKeyPress(dirs[(dirs.indexOf(pressed ? +pressed.innerText : 4)+1)%dirs.length]);
+},2000);
+
+function demoJump(){
+	document.querySelector('#howto .jumping .key').className='key keep_pressing';
+	const konEl = document.querySelector('#howto .jumping .kon');
+	const wasRight = konEl.classList.contains('k6');
+	konEl.className = `kon k${wasRight?4:6} jump`;
+	konEl.style.left = `${wasRight?0:320}px`;
+}
+window.setInterval(demoJump,5000);
+demoJump();
+
+
+
+function autoplay(){
+	moveRequestsQueue.push.apply(moveRequestsQueue,thePath.map((pos,i)=>{
+	  const nextPos = thePath[i+1];
+	  if(!nextPos)return ''
+	  const diff = sub(nextPos,pos);
+	  let keys=""
+	  Object.entries(dir2off).forEach(([dir,off])=>{
+	    const eq = (a,b) => JSON.stringify(a)==JSON.stringify(b)
+	    if(eq(off,diff)){
+	      keys=dir;
+	    }else if(eq(scale(2,off),diff)){
+	      keys=dir + " "
+	    }
+	  })
+	  return keys;
+	}).join('').split('')); processNextMoveRequest();
+}
+
+</script>
+
